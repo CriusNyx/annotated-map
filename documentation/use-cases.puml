@@ -24,12 +24,36 @@ open_a_project --> Server
 @enduml
 
 
-@startuml Project Editing use cases
+@startuml Project Mode Use Cases
 
 left to right direction
 
 actor DM
 
 actor User
+
+database Server
+
+package Project{
+    (See polygon descriptions) as see_polygon_decriptions
+    (Create new polygons) as create_new_polygons
+    (Create new nodes) as create_new_nodes
+    (Move or Delete existing nodes) as manage_existing_nodes
+}
+
+User --> see_polygon_decriptions
+DM --> see_polygon_decriptions
+
+User --> create_new_polygons
+DM --> create_new_polygons
+
+DM --> create_new_nodes
+
+DM --> manage_existing_nodes
+
+see_polygon_decriptions --> Server
+create_new_polygons --> Server
+create_new_nodes --> Server
+manage_existing_nodes --> Server
 
 @enduml
