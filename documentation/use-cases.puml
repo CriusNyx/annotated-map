@@ -1,0 +1,35 @@
+@startuml Project Management Use Cases
+
+left to right direction
+
+actor DM
+
+actor User
+
+database Server
+
+package Project {
+    (Make a new project) as make_a_project
+    (Open an existing project) as open_a_project
+}
+
+DM --> make_a_project
+DM --> open_a_project
+
+User --> open_a_project
+
+make_a_project --> Server
+open_a_project --> Server
+
+@enduml
+
+
+@startuml Project Editing use cases
+
+left to right direction
+
+actor DM
+
+actor User
+
+@enduml
