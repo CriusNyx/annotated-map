@@ -1,0 +1,79 @@
+@startuml DataStructures
+
+class Project{
+    - nodes : MapNode[]
+    --
+    + constructor()
+    --
+    + getTree() : MapTreeNode[]
+    - buildTree(rootIndex : number, map : Map) : MapTreeNode
+    + addNode() : MapNode
+    + getNodes() : MapNodes[]
+    + removeNode(node : MapNode)
+}
+
+class MapTreeNode{
+    - mapNode : MapNode
+    - children : MapTreeNode[]
+    --
+    + constructor(mapNode : node, children : MapTreeNode[])
+    --
+    + getMapNode() : MapNode
+    + getChildren() : MapTreeNode[]
+}
+
+class MapNode{
+    - id : number
+    - parent : MapNode
+    - graphic : string
+    - annotations : Annotation[]
+    --
+    + constructor(graphic : string, parent : MapNode)
+    --
+    + getID() : number
+    + getParent() : number
+    + setParent(node : MapNode)
+    + getGraphic() : string
+    + setGraphic(value : string)
+    + getAnnotations() : Annotation[]
+    + addAnnotation(annotation : Annotation)
+    + removeAnnotation(annotation : Annotation)
+    + replaceAnnotation(oldAnnotation : Annotation, newAnnotation : Annotation)
+}
+
+class Annotation{
+    - polygon : Polygon
+    - richText : RichText
+    --
+    + constructor(polygon : Polygon, annotation : RichText)
+    --
+    + getPolygon() : Polygon
+    + pointInPolygon(point : Point) : boolean
+    + getText() : RichText
+    + clone(polygon : Polygon = null, text : RichText  = null) : Annotation
+}
+
+class RichText{
+    - text : string
+    --
+    + constructor(text : string)
+    --
+    + getJSX() : JSX
+}
+
+class Polygon{
+    // External
+}
+
+Project <|-- MapNode
+    MapNode <|-- Annotation
+        Annotation <|-- RichText
+        Annotation <|-- Polygon
+            Polygon <|-- Point
+
+legend
+Point = ~[number, number~]
+Polygon = ~[Point~]
+endlegend
+
+@enduml

@@ -1,0 +1,44 @@
+
+@startuml ERD
+
+package Global{
+    entity Manifest{
+        Projects : string
+    }
+}
+
+package Project1{
+    entity Project1.Nodes{
+        *id : number
+        graphic : string
+        parent : number
+    }
+
+    entity Project1.Annotations{
+        id : number
+        parent : number
+        polygon : json
+        description : richtext
+    }
+
+    Project1.Nodes ||--o{ Project1.Annotations
+}
+
+package Project2{
+    entity Project2.Nodes{
+        *id : number
+        graphic : string
+        parent : number
+    }
+
+    entity Project2.Annotations{
+        id : number
+        parent : number
+        polygon : json
+        description : richtext
+    }
+
+    Project2.Nodes ||--o{ Project2.Annotations
+}
+
+@enduml
