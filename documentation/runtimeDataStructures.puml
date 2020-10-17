@@ -25,6 +25,7 @@ class MapTreeNode{
 class MapNode{
     - id : number
     - parent : MapNode
+    - name : Name
     - graphic : string
     - annotations : Annotation[]
     --
@@ -33,6 +34,8 @@ class MapNode{
     + getID() : number
     + getParent() : number
     + setParent(node : MapNode)
+    + getName() : string
+    + setName(name : string)
     + getGraphic() : string
     + setGraphic(value : string)
     + getAnnotations() : Annotation[]

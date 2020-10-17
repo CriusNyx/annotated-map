@@ -9,7 +9,7 @@ class Project{
         this.nodes = nodes;
     }
 
-    public getTree(){
+    public getTree(onTitleClick: (id : number) => void){
         let map = new Map<number, {node: MapNode, children : number[]}>();
 
         // initialize map
@@ -35,7 +35,7 @@ class Project{
 
         let output : MapTreeNode[] = [];
         for(let x of rootNodes){
-            output.push(this.buildTree(x, map));
+            output.push(this.buildTree(x, map, onTitleClick));
         }
 
         return output;
@@ -43,11 +43,12 @@ class Project{
 
     private buildTree(
         rootIndex : number, 
-        map : Map<number, {node: MapNode, children : number[]}>) : MapTreeNode{
+        map : Map<number, {node: MapNode, children : number[]}>,
+        onTitleClick: (id: number) => void) : MapTreeNode{
             let element = map.get(rootIndex);
             if(element){
-                let children = element.children.map((x) => this.buildTree(x, map));
-                return new MapTreeNode(element.node, children);
+                let children = element.children.map((x) => this.buildTree(x, map, onTitleClick));
+                return new MapTreeNode(element.node, children, onTitleClick);
             }
             else{
                 throw 'Invalid tree topology provided'
