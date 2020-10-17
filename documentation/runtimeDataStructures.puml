@@ -1,32 +1,49 @@
 @startuml DataStructures
 
 class Project{
-    + rootNodes : MapNode[]
+    - nodes : MapNode[]
     --
     + constructor()
+    --
+    + getTree() : MapTreeNode[]
+    - buildTree(rootIndex : number, map : Map) : MapTreeNode
+    + addNode() : MapNode
+    + getNodes() : MapNodes[]
+    + removeNode(node : MapNode)
 }
 
-
+class MapTreeNode{
+    - mapNode : MapNode
+    - children : MapTreeNode[]
+    --
+    + constructor(mapNode : node, children : MapTreeNode[])
+    --
+    + getMapNode() : MapNode
+    + getChildren() : MapTreeNode[]
+}
 
 class MapNode{
-    - children : MapNode[]
+    - id : number
+    - parent : MapNode
     - graphic : string
     - annotations : Annotation[]
     --
-    + constructor(graphic : string, parent : MapNode[])
+    + constructor(graphic : string, parent : MapNode)
     --
+    + getID() : number
+    + getParent() : number
+    + setParent(node : MapNode)
     + getGraphic() : string
     + setGraphic(value : string)
-    + getChildren() : MapNode[]
-    + setParent(node : MapNode)
     + getAnnotations() : Annotation[]
     + addAnnotation(annotation : Annotation)
     + removeAnnotation(annotation : Annotation)
+    + replaceAnnotation(oldAnnotation : Annotation, newAnnotation : Annotation)
 }
 
 class Annotation{
     - polygon : Polygon
-    - annotation : RichText
+    - richText : RichText
     --
     + constructor(polygon : Polygon, annotation : RichText)
     --
@@ -55,7 +72,7 @@ Project <|-- MapNode
             Polygon <|-- Point
 
 legend
-Point = ~[x : number y : number~]
+Point = ~[number, number~]
 Polygon = ~[Point~]
 endlegend
 
