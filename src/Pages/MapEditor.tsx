@@ -4,6 +4,9 @@ import 'react-sortable-tree/style.css';
 import MapNode from '../Project/MapNode';
 import MapTreeNode from '../Project/MapTreeNode';
 import Project from '../Project/Project';
+import { Button, TextField } from '@material-ui/core';
+import '../App.css';
+import MapNodeEditor from './MapEditor/MapNodeEditor';
 
 interface Props{
     project : Project;
@@ -24,26 +27,38 @@ class MapEditor extends React.Component<Props, State>{
         this.updateTreeData = this.updateTreeData.bind(this);
         this.onTitleClick = this.onTitleClick.bind(this);
         this.getSingleNodeEditor = this.getSingleNodeEditor.bind(this);
+        this.addNodeButtonClicked = this.addNodeButtonClicked.bind(this);
+        this.updateState = this.updateState.bind(this)
 
         let project = props.project;
-        let treeData = project.getTree(this.onTitleClick);
+        let treeData = project.getTree(this.onTitleClick, this.updateState);
 
-        this.state = { project, treeData, expandMap: new Map(), activeNode : null };
-
-        
+        this.state = { project, treeData, expandMap: new Map(), activeNode : null };   
     }
 
     render(){
         return <>
-            <div style={{ height: 400 }}>
-                <h1>Heading</h1>
-                <SortableTree
-                treeData={this.state.treeData}
-                onChange={this.updateTreeData}
-                />
+            <div style={{ height: '400px' }}>
+                <h1 style = {{padding: 15, margin: 0}}>Map Editor</h1>
+                <SortableTree treeData={this.state.treeData} onChange={this.updateTreeData}/>
+                <Button onClick={this.addNodeButtonClicked}>
+                    New Node
+                </Button>
                 {this.getSingleNodeEditor()}
             </div>
         </>
+    }
+
+    private updateState(){
+        this.updateTreeData(this.state.treeData);
+    }
+
+    private addNodeButtonClicked(e : React.MouseEvent<HTMLElement, MouseEvent>){
+        let newNode = this.state.project.addNode();
+        let treeData = this.state.treeData;
+        treeData.push(new MapTreeNode(newNode, [], this.onTitleClick, this.updateState));
+
+        this.updateTreeData(treeData);
     }
 
     private getExpandMapFromTree(treeData : MapTreeNode[], map : Map<number, boolean>){
@@ -73,8 +88,10 @@ class MapEditor extends React.Component<Props, State>{
                 this.updateParentHierarchyRecursive(null, root);
             }
 
+            this.state.project.orderNodes(this.getNodeOrder(nodes));
+
             // get new data structure
-            let newTree = this.state.project.getTree(this.onTitleClick);
+            let newTree = this.state.project.getTree(this.onTitleClick, this.updateState);
             this.applyExpandMapToTree(newTree, expandMap);
 
             this.setState({treeData: newTree});
@@ -87,8 +104,8 @@ class MapEditor extends React.Component<Props, State>{
         if(child.mapNode.parent != parent?.mapNode.id){
             child.mapNode.setParent(parent?.mapNode ?? null);
         }
-        for(let subchild of child.children){
-            this.updateParentHierarchyRecursive(child, subchild);
+        for(let subChild of child.children){
+            this.updateParentHierarchyRecursive(child, subChild);
         }
     }
 
@@ -99,18 +116,19 @@ class MapEditor extends React.Component<Props, State>{
 
     private getSingleNodeEditor(){
         if(this.state.activeNode){
-            return (
-                <p>
-                    <form onSubmit={(e)=>{e.preventDefault()}}>
-                        <label>Name: <input type='text' name='name' value={this.state.activeNode.name} onChange={(x)=>{this.state.activeNode?.setName(x.target.value); this.updateTreeData(this.state.treeData)}} /></label>
-                    </form>
-                </p>
-            
-            )
+            return <MapNodeEditor key={this.state.activeNode.id} node={this.state.activeNode} onChange={this.updateState}/>
         }
         else{
             return null;
         }
+    }
+
+    private getNodeOrder(nodes : MapTreeNode[], current: number[] = []){
+        for(let x of nodes){
+            current.push(x.mapNode.id);
+            this.getNodeOrder(x.children, current);
+        }
+        return current;
     }
 }
 
