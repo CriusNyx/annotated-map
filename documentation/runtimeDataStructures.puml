@@ -1,0 +1,62 @@
+@startuml DataStructures
+
+class Project{
+    + rootNodes : MapNode[]
+    --
+    + constructor()
+}
+
+
+
+class MapNode{
+    - children : MapNode[]
+    - graphic : string
+    - annotations : Annotation[]
+    --
+    + constructor(graphic : string, parent : MapNode[])
+    --
+    + getGraphic() : string
+    + setGraphic(value : string)
+    + getChildren() : MapNode[]
+    + setParent(node : MapNode)
+    + getAnnotations() : Annotation[]
+    + addAnnotation(annotation : Annotation)
+    + removeAnnotation(annotation : Annotation)
+}
+
+class Annotation{
+    - polygon : Polygon
+    - annotation : RichText
+    --
+    + constructor(polygon : Polygon, annotation : RichText)
+    --
+    + getPolygon() : Polygon
+    + pointInPolygon(point : Point) : boolean
+    + getText() : RichText
+    + clone(polygon : Polygon = null, text : RichText  = null) : Annotation
+}
+
+class RichText{
+    - text : string
+    --
+    + constructor(text : string)
+    --
+    + getJSX() : JSX
+}
+
+class Polygon{
+    // External
+}
+
+Project <|-- MapNode
+    MapNode <|-- Annotation
+        Annotation <|-- RichText
+        Annotation <|-- Polygon
+            Polygon <|-- Point
+
+legend
+Point = ~[x : number y : number~]
+Polygon = ~[Point~]
+endlegend
+
+@enduml

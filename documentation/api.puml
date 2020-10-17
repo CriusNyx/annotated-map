@@ -1,0 +1,22 @@
+@startuml Login
+
+Front --> Back : ./api/validatePasswordLogin
+Front --> Back : ./api/validateLinkLogin
+
+@enduml
+
+@startuml Data
+
+actor Front
+database Back
+
+Front --> Back : ./api/getAllProjects
+Front --> Back : ./api/getAllNodes
+Front --> Back : ./api/getAllAnnotations
+
+Front --> Back : ./api/setNodeState
+Front --> Back : ./api/setAnnotationState
+
+Front --> Back : ./api/uploadImage
+
+@enduml
