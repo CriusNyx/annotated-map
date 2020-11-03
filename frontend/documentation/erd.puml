@@ -5,17 +5,24 @@ package Global{
     entity Manifest{
         Projects : string
     }
+    entity ProjectIDFreelist{
+        
+    }
+    entity NodeIDsFreelist{
+        
+    }
+    entity AnnotationIDFreelist
 }
 
 package Project1{
     entity Project1.Nodes{
-        *id : number
+        * id : number
         graphic : string
         parent : number
     }
 
     entity Project1.Annotations{
-        id : number
+        * id : number
         parent : number
         polygon : json
         description : richtext
@@ -26,13 +33,13 @@ package Project1{
 
 package Project2{
     entity Project2.Nodes{
-        *id : number
+        * id : number
         graphic : string
         parent : number
     }
 
     entity Project2.Annotations{
-        id : number
+        * id : number
         parent : number
         polygon : json
         description : richtext
