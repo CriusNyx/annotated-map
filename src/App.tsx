@@ -6,11 +6,10 @@ import Landing from './Landing';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Stack root={<Landing/>}/>
-      </header>
-    </div>
+    <html className="App">
+      <Stack root={<Landing/>}/>
+    </html>
+    
   );
 }
 
