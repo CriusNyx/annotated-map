@@ -5,10 +5,12 @@ import RichText from './RichText';
 const geometric = require('geometric');
 
 class Annotation{
+    id : number
     polygon : Array<[number, number]>
     richText : RichText
 
     constructor(polygon : Array<[number, number]>, richText : RichText){
+        this.id = -1;
         this.polygon = polygon;
         this.richText = richText;
     }
