@@ -3,15 +3,13 @@ import MapNode from './MapNode'
 import MapTreeNode from './MapTreeNode';
 
 class Project{
-    name : string
     nodes : MapNode[]
 
     constructor(nodes : MapNode[] = []){
-        this.name = '';
         this.nodes = nodes;
     }
 
-    public getTree(onTitleClick: (id : number) => void, onTitleChanged : ()=>void){
+    public getTree(){
         let map = new Map<number, {node: MapNode, children : number[]}>();
 
         // initialize map
@@ -37,7 +35,7 @@ class Project{
 
         let output : MapTreeNode[] = [];
         for(let x of rootNodes){
-            output.push(this.buildTree(x, map, onTitleClick, onTitleChanged));
+            output.push(this.buildTree(x, map));
         }
 
         return output;
@@ -45,14 +43,11 @@ class Project{
 
     private buildTree(
         rootIndex : number, 
-        map : Map<number, {node: MapNode, children : number[]}>,
-        onTitleClick: (id: number) => void,
-        onTitleChanged: () => void) 
-        : MapTreeNode{
+        map : Map<number, {node: MapNode, children : number[]}>) : MapTreeNode{
             let element = map.get(rootIndex);
             if(element){
-                let children = element.children.map((x) => this.buildTree(x, map, onTitleClick, onTitleChanged));
-                return new MapTreeNode(element.node, children, onTitleClick, onTitleChanged);
+                let children = element.children.map((x) => this.buildTree(x, map));
+                return new MapTreeNode(element.node, children);
             }
             else{
                 throw 'Invalid tree topology provided'
@@ -85,14 +80,6 @@ class Project{
                 x.setParent(null);
             }
         }
-    }
-
-    public orderNodes(order : number[]){
-        let map = new Map<number, MapNode>();
-        for(let x of this.nodes){
-            map.set(x.id, x);
-        }
-        this.nodes = order.map((x) => map.get(x)) as MapNode[];
     }
 }
 

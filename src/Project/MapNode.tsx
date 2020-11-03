@@ -3,14 +3,12 @@ import Annotation from './Annotation';
 
 class MapNode{
     id : number;
-    name : string;
     parent : number | null;
     graphic : string;
     annotations : Annotation[];
 
     constructor(id : number){
         this.id = id;
-        this.name = 'map ' + id;
         this.parent = null;
         this.graphic = '';
         this.annotations = [];
@@ -22,14 +20,6 @@ class MapNode{
 
     public getParent(){
         return this.parent;
-    }
-
-    public getName(){
-        return this.name;
-    }
-
-    public setName(name : string){
-        this.name = name;
     }
 
     public setParent(parent : MapNode | null){
