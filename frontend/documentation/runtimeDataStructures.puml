@@ -1,12 +1,15 @@
 @startuml DataStructures
 
 class Project{
+    - name : string
     - nodes : MapNode[]
     --
     + constructor()
     --
     + getTree() : MapTreeNode[]
     - buildTree(rootIndex : number, map : Map) : MapTreeNode
+    + getName() : string
+    + setName(name : string)
     + addNode() : MapNode
     + getNodes() : MapNodes[]
     + removeNode(node : MapNode)
@@ -24,6 +27,7 @@ class MapTreeNode{
 
 class MapNode{
     - id : number
+    - name: string
     - parent : MapNode
     - graphic : string
     - annotations : Annotation[]
@@ -31,6 +35,8 @@ class MapNode{
     + constructor(graphic : string, parent : MapNode)
     --
     + getID() : number
+    + getName() : string
+    + setName(name : string)
     + getParent() : number
     + setParent(node : MapNode)
     + getGraphic() : string

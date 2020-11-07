@@ -1,11 +1,16 @@
 import GraphQLServer from './GraphQLServer';
-import GraphQLClient from './GrpahQLClient';
+import GraphQLTestClient from './GrpahQLTestClient';
+import MyDatabase from './database/MyDatabase';
 
 async function run() {
-  let serverStatus = await new GraphQLServer().run();
+  let databaseStatus = await MyDatabase.init();
+  console.log(databaseStatus);
+  let serverStatus = await new GraphQLServer().run().catch((e) => {
+    console.log(e);
+  });
   console.log(serverStatus);
-  let clientStatus = await new GraphQLClient().run();
-  console.log(clientStatus);
+  let client = await new GraphQLTestClient().run();
+  console.log(JSON.stringify(client));
 }
 
 run();
