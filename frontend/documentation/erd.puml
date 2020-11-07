@@ -1,44 +1,28 @@
 
 @startuml ERD
 
-package Global{
-    entity Manifest{
-        Projects : string
-    }
+entity Project{
+    * ProjectID : INT
+    ProjectName : VARCHAR(255)
 }
 
-package Project1{
-    entity Project1.Nodes{
-        *id : number
-        graphic : string
-        parent : number
-    }
-
-    entity Project1.Annotations{
-        id : number
-        parent : number
-        polygon : json
-        description : richtext
-    }
-
-    Project1.Nodes ||--o{ Project1.Annotations
+entity Nodes{
+    * ProjectID : INT
+    * NodeID : INT
+    Name : VARCHAR(255)
+    GraphicName : VARCHAR(255)
+    ParentNode : INT
 }
 
-package Project2{
-    entity Project2.Nodes{
-        *id : number
-        graphic : string
-        parent : number
-    }
-
-    entity Project2.Annotations{
-        id : number
-        parent : number
-        polygon : json
-        description : richtext
-    }
-
-    Project2.Nodes ||--o{ Project2.Annotations
+entity Annotations{
+    * ProjectID : INT
+    * NodeID : INT
+    * AnnotationID : INT
+    RichText : TEXT
+    Polygon : TEXT
 }
+
+Project ||--o{ Nodes
+Nodes ||--o{ Annotations
 
 @enduml

@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "strict": true,
-    "target": "es5"
+    "target": "es5",
+    "esModuleInterop": true
   },
   "include": ["src"]
 }
