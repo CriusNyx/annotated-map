@@ -1,11 +1,7 @@
 import express from 'express';
+import cors from 'cors';
 import { graphqlHTTP } from 'express-graphql';
-import { buildSchema, concatAST, GraphQLSchema } from 'graphql';
-import Project from './read/Project';
-import ProjectInput from './write/ProjectInput';
-import { ProjectInputArgs } from './write/ProjectInput';
-import apiSchema from './apiSchema';
-import APIRoot from './APIRoot';
+import APIRoot, { apiSchema } from './APIRoot';
 
 class GraphQLServer {
   constructor() {
@@ -26,6 +22,7 @@ class GraphQLServer {
 
   async startExpress(root: any) {
     let app = express();
+    app.use(cors());
     app.use(
       '/project',
       graphqlHTTP({

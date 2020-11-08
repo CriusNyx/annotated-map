@@ -1,5 +1,4 @@
 import MyDatabase from '../database/MyDatabase';
-import Polygon from './Polygon';
 
 class Annotation {
   private projectID: number;
