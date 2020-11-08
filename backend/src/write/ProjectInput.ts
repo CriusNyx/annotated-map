@@ -1,6 +1,5 @@
-import NodeInput from './NodeInput';
 import MyDatabase from '../database/MyDatabase';
-import { NodeInputArgs } from './NodeInput';
+import NodeInput, { NodeInputArgs } from './NodeInput';
 
 interface ProjectInputArgs {
   id: number;

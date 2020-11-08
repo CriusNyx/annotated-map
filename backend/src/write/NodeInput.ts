@@ -1,4 +1,3 @@
-import { ProvidedRequiredArgumentsOnDirectivesRule } from 'graphql/validation/rules/ProvidedRequiredArgumentsRule';
 import MyDatabase from '../database/MyDatabase';
 import AnnotationInput, { AnnotationInputArgs } from './AnnotationInput';
 

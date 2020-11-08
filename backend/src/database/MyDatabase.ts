@@ -2,7 +2,6 @@ import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
 import fs from 'fs';
 import Project from '../read/Project';
-import ProjectInput from '../write/ProjectInput';
 import MapNode from '../read/MapNode';
 import Annotation from '../read/Annotation';
 

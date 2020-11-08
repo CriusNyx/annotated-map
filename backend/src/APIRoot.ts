@@ -1,7 +1,62 @@
 import Project from './read/Project';
-import ProjectInput from './write/ProjectInput';
-import { ProjectInputArgs } from './write/ProjectInput';
+import ProjectInput, { ProjectInputArgs } from './write/ProjectInput';
 import MyDatabase from './database/MyDatabase';
+import { buildSchema } from 'graphql';
+import Auth, { LoginType } from './auth/auth';
+
+let apiSchema = buildSchema(`
+type Annotation{
+  id: Int
+  polygon: String
+  richText: String
+}
+
+input AnnotationInput{
+  id: Int
+  polygon: String
+  richText: String
+}
+
+type MapNode{
+  id: Int
+  name: String
+  parent: Int
+  graphic: String
+  annotations: [Annotation]
+}
+
+input MapNodeInput{
+  id: Int
+  name: String
+  parent: Int
+  graphic: String
+  annotations: [AnnotationInput]
+}
+
+type Project{
+  id: Int
+  name: String
+  nodes: [MapNode]
+}
+
+input ProjectInput{
+  id: Int
+  name: String
+  nodes: [MapNodeInput]
+}
+
+type Query {
+  project(id: Int): Project
+  login(password: String): String
+}
+
+type Mutation{
+  write(project: ProjectInput): String
+  makeNewProject: Project
+  makeNewNode(projectID: Int): MapNode
+  makeNewAnnotation(projectID: Int, nodeID: Int): Annotation
+}
+`);
 
 class APIRoot {
   log(funcName: string, input: any, output: any) {
@@ -14,6 +69,26 @@ class APIRoot {
     let { id } = input;
     let output = new Project(id);
     this.log('project', input, output);
+    return output;
+  }
+
+  login(input: { password: string }) {
+    let { password } = input;
+    let loginType = Auth.ValidateLogin(password);
+    let output = '';
+    switch (loginType) {
+      case LoginType.User:
+        output = 'User';
+        break;
+      case LoginType.Admin:
+        output = 'Admin';
+        break;
+      case LoginType.Failed:
+        output = 'Failed';
+        break;
+    }
+
+    this.log('login', input, output);
     return output;
   }
 
@@ -57,3 +132,4 @@ class APIRoot {
 }
 
 export default APIRoot;
+export { apiSchema };

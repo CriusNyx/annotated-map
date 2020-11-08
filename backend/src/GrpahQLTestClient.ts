@@ -37,10 +37,10 @@ class GraphQLTestClient {
     //   console.log(e);
     // });
     let c = null;
-    console.log('read: ' + JSON.stringify(a));
-    console.log('write: ' + JSON.stringify(b));
-    console.log('makeNewProject: ' + JSON.stringify(c));
-    return 'done';
+    // console.log('read: ' + JSON.stringify(a));
+    // console.log('write: ' + JSON.stringify(b));
+    // console.log('makeNewProject: ' + JSON.stringify(c));
+    return 'Client Ready';
   }
 }
 

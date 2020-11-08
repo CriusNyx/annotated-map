@@ -1,5 +1,5 @@
 import GraphQLServer from './GraphQLServer';
-import GraphQLTestClient from './GrpahQLTestClient';
+// import GraphQLTestClient from './GrpahQLTestClient';
 import MyDatabase from './database/MyDatabase';
 
 async function run() {
@@ -9,8 +9,8 @@ async function run() {
     console.log(e);
   });
   console.log(serverStatus);
-  let client = await new GraphQLTestClient().run();
-  console.log(JSON.stringify(client));
+  // let clientStatus = await new GraphQLTestClient().run();
+  // console.log(clientStatus);
 }
 
 run();
