@@ -24,6 +24,13 @@ class Project {
 
     return result.map((x) => new MapNode(this.id, x.NODE_ID));
   }
+
+  public static async getAllProjectIDs() {
+    const sql = 'SELECT PROJECT_ID FROM PROJECTS';
+
+    let result = await MyDatabase.database.all(sql, []);
+    return result.map<number>((x) => x.PROJECT_ID);
+  }
 }
 
 export default Project;

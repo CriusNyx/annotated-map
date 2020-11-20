@@ -7,17 +7,7 @@ import MapNode from "./Project/MapNode";
 import { url } from "inspector";
 import { request, gql } from "graphql-request";
 import ProjectSelector from "./ProjectEditor/ProjectSelector";
-
-enum LoginType {
-  User = "User",
-  Admin = "Admin",
-  Failed = "Failed",
-}
-
-interface Auth {
-  password: string;
-  loginType: LoginType;
-}
+import { LoginType, Auth } from "./api";
 
 interface Props {}
 
@@ -120,8 +110,6 @@ class Login extends React.Component<Props, State> {
   }
 
   async tryLogin(password: string) {
-    let args = { auth: { password } };
-
     let loginRequest = gql`
       query DoLogin($auth: Auth) {
         login(auth: $auth) {
@@ -129,6 +117,8 @@ class Login extends React.Component<Props, State> {
         }
       }
     `;
+
+    let args = { auth: { password } };
 
     let loginResponse = await request(
       `http://${window.location.hostname}:4000/project`,
@@ -156,4 +146,3 @@ class Login extends React.Component<Props, State> {
 }
 
 export default Login;
-export { LoginType };

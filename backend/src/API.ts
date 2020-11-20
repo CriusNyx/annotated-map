@@ -61,6 +61,7 @@ input ProjectInput{
 }
 
 type Query {
+  allProjects(auth: Auth): [Project]
   project(id: Int, auth: Auth): Project
   login(auth: Auth): AuthResponse
 }
@@ -78,6 +79,13 @@ class APIRoot {
     console.log(
       `${funcName}(${JSON.stringify(input)}) -> ${JSON.stringify(output)}`
     );
+  }
+
+  async allProjects(input: { auth: Auth }) {
+    let ids = await Project.getAllProjectIDs();
+    let output = ids.map((x) => new Project(x));
+    this.log('allProjects', input, {});
+    return output;
   }
 
   project(input: { id: number; auth: Auth }) {
