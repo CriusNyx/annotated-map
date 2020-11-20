@@ -6,6 +6,18 @@ import Project from "./Project/Project";
 import MapNode from "./Project/MapNode";
 import { url } from "inspector";
 import { request, gql } from "graphql-request";
+import ProjectSelector from "./ProjectEditor/ProjectSelector";
+
+enum LoginType {
+  User = "User",
+  Admin = "Admin",
+  Failed = "Failed",
+}
+
+interface Auth {
+  password: string;
+  loginType: LoginType;
+}
 
 interface Props {}
 
@@ -13,7 +25,7 @@ interface State {
   passwordInput: string;
 }
 
-class Landing extends React.Component<Props, State> {
+class Login extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -31,6 +43,33 @@ class Landing extends React.Component<Props, State> {
     }
 
     this.state = { passwordInput };
+  }
+
+  private static auth: Auth | null = null;
+
+  private static getAuthValue(auth: Auth) {
+    switch (auth.loginType) {
+      case LoginType.Admin:
+        return 2;
+      case LoginType.User:
+        return 1;
+      case LoginType.Failed:
+        return 0;
+    }
+  }
+
+  public static setAuth(auth: Auth) {
+    if (this.auth) {
+      if (this.getAuthValue(auth) > this.getAuthValue(this.auth)) {
+        this.auth = auth;
+      }
+    } else {
+      this.auth = auth;
+    }
+  }
+
+  public static getAuth() {
+    return Login.auth;
   }
 
   render() {
@@ -81,17 +120,34 @@ class Landing extends React.Component<Props, State> {
   }
 
   async tryLogin(password: string) {
-    let loginRequest = gql`
-        {
-            login(password: "${password}")
-        }`;
+    let args = { auth: { password } };
 
-    let login = await request(
-      "http://localhost:4000/project",
-      loginRequest
+    let loginRequest = gql`
+      query DoLogin($auth: Auth) {
+        login(auth: $auth) {
+          loginType
+        }
+      }
+    `;
+
+    let loginResponse = await request(
+      `http://${window.location.hostname}:4000/project`,
+      loginRequest,
+      args
     ).catch((e) => alert(JSON.stringify(e)));
 
-    Stack.Push(<h1>{login.login}</h1>);
+    let auth = { password, loginType: loginResponse.login.loginType } as Auth;
+
+    if (
+      auth.loginType === LoginType.User ||
+      auth.loginType === LoginType.Admin
+    ) {
+      Login.setAuth(auth);
+
+      Stack.Push(<ProjectSelector />);
+    } else {
+      alert("incorrect password");
+    }
   }
 
   onInputUpdate(event: React.ChangeEvent<HTMLInputElement>) {
@@ -99,4 +155,5 @@ class Landing extends React.Component<Props, State> {
   }
 }
 
-export default Landing;
+export default Login;
+export { LoginType };

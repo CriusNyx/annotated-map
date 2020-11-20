@@ -2,9 +2,24 @@ import Project from './read/Project';
 import ProjectInput, { ProjectInputArgs } from './write/ProjectInput';
 import MyDatabase from './database/MyDatabase';
 import { buildSchema } from 'graphql';
-import Auth, { LoginType } from './auth/auth';
+import Authentication, { Auth, LoginType } from './auth/auth';
 
 let apiSchema = buildSchema(`
+
+input Auth{
+  password: String
+}
+
+enum LoginType{
+  User
+  Admin
+  Failed
+}
+
+type AuthResponse{
+  loginType: LoginType
+}
+
 type Annotation{
   id: Int
   polygon: String
@@ -46,15 +61,15 @@ input ProjectInput{
 }
 
 type Query {
-  project(id: Int): Project
-  login(password: String): String
+  project(id: Int, auth: Auth): Project
+  login(auth: Auth): AuthResponse
 }
 
 type Mutation{
-  write(project: ProjectInput): String
-  makeNewProject: Project
-  makeNewNode(projectID: Int): MapNode
-  makeNewAnnotation(projectID: Int, nodeID: Int): Annotation
+  write(project: ProjectInput, auth: Auth): String
+  makeNewProject(auth: Auth): Project
+  makeNewNode(projectID: Int, auth: Auth): MapNode
+  makeNewAnnotation(projectID: Int, nodeID: Int, auth: Auth): Annotation
 }
 `);
 
@@ -65,34 +80,24 @@ class APIRoot {
     );
   }
 
-  project(input: { id: number }) {
+  project(input: { id: number; auth: Auth }) {
     let { id } = input;
     let output = new Project(id);
     this.log('project', input, output);
     return output;
   }
 
-  login(input: { password: string }) {
-    let { password } = input;
-    let loginType = Auth.ValidateLogin(password);
-    let output = '';
-    switch (loginType) {
-      case LoginType.User:
-        output = 'User';
-        break;
-      case LoginType.Admin:
-        output = 'Admin';
-        break;
-      case LoginType.Failed:
-        output = 'Failed';
-        break;
-    }
+  login(input: { auth: { password: string } }) {
+    console.log(JSON.stringify(input));
+    let { auth } = input;
+    let loginType = Authentication.ValidateLogin(auth);
+    let output = { loginType };
 
     this.log('login', input, output);
     return output;
   }
 
-  write(input: { project: ProjectInputArgs }) {
+  write(input: { project: ProjectInputArgs; auth: Auth }) {
     console.log('write(' + JSON.stringify(input) + ')');
     let { project } = input;
     new ProjectInput(project).write();
@@ -103,8 +108,7 @@ class APIRoot {
     return output;
   }
 
-  async makeNewProject() {
-    let input = {};
+  async makeNewProject(input: { auth: Auth }) {
     let output = await MyDatabase.makeNewProject();
 
     this.log('makeNewProject', input, output);
@@ -112,7 +116,7 @@ class APIRoot {
     return output;
   }
 
-  async makeNewNode(input: { projectID: number }) {
+  async makeNewNode(input: { projectID: number; auth: Auth }) {
     let { projectID } = input;
     let output = await MyDatabase.makeNewNode(projectID);
 
@@ -121,7 +125,11 @@ class APIRoot {
     return output;
   }
 
-  async makeNewAnnotation(input: { projectID: number; nodeID: number }) {
+  async makeNewAnnotation(input: {
+    projectID: number;
+    nodeID: number;
+    auth: Auth;
+  }) {
     let { projectID, nodeID } = input;
     let output = await MyDatabase.makeNewAnnotation(projectID, nodeID);
 

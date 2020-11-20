@@ -1,11 +1,18 @@
+import { Lexer } from 'graphql';
+
 enum LoginType {
-  User,
-  Admin,
-  Failed,
+  User = 'User',
+  Admin = 'Admin',
+  Failed = 'Failed',
 }
 
-class Auth {
-  public static ValidateLogin(password: string) {
+interface Auth {
+  password: string;
+}
+
+class Authenticate {
+  public static ValidateLogin(auth: Auth) {
+    let { password } = auth;
     if (password === 'asdf') {
       return LoginType.User;
     } else if (password === 'qwer') {
@@ -16,5 +23,5 @@ class Auth {
   }
 }
 
-export default Auth;
-export { LoginType };
+export default Authenticate;
+export { LoginType, Auth };

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { graphqlHTTP } from 'express-graphql';
-import APIRoot, { apiSchema } from './APIRoot';
+import APIRoot, { apiSchema } from './API';
 
 class GraphQLServer {
   constructor() {
